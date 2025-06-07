@@ -1,0 +1,100 @@
+/* Holographic effect styles */
+.holographic-container {
+  perspective: 1000px;
+}
+
+.holographic-card {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: all 0.5s ease;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.holographic-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    45deg,
+    rgba(100, 255, 255, 0.1) 0%,
+    rgba(100, 100, 255, 0.3) 50%,
+    rgba(255, 100, 255, 0.1) 100%
+  );
+  z-index: -1;
+}
+
+.holographic-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 45%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 55%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(30deg);
+  animation: holographic-shine 3s infinite;
+}
+
+@keyframes holographic-shine {
+  0% {
+    transform: rotate(30deg) translate(-30%, -30%);
+  }
+  100% {
+    transform: rotate(30deg) translate(30%, 30%);
+  }
+}
+
+/* Dark mode specific styles */
+.dark .holographic-card {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .holographic-card::before {
+  background: linear-gradient(
+    45deg,
+    rgba(0, 100, 255, 0.1) 0%,
+    rgba(100, 0, 255, 0.3) 50%,
+    rgba(255, 0, 255, 0.1) 100%
+  );
+}
+
+/* Holographic hover effect for table rows */
+.holographic-hover:hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.holographic-hover:hover::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 45%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0) 55%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(30deg);
+  animation: holographic-shine 3s infinite;
+}
