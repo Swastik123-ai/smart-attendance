@@ -18,14 +18,13 @@ function App() {
   const auth = getAuth();
   const db = getDatabase();
 
-  // Listen for auth state
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
 
       if (currentUser) {
         try {
-          const roleRef = ref(db, `attendance/users/${currentUser.uid}/role`);
+          const roleRef = ref(db, `users/${currentUser.uid}/role`);
           const snapshot = await get(roleRef);
           if (snapshot.exists()) {
             setRole(snapshot.val());
