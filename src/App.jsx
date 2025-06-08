@@ -15,31 +15,27 @@ function App() {
   const [user, setUser] = useState(null);
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [role, setRole] = useState(null);
-
   const auth = getAuth();
   const db = getDatabase();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      console.log("🔁 Auth changed:", currentUser?.uid);
       setUser(currentUser);
-      console.log("🟡 Auth Changed: ", currentUser?.uid);
 
       if (currentUser) {
         try {
-          // ⚠️ Adjust this path based on your Firebase structure
-          const roleRef = ref(db, `users/${currentUser.uid}/role`);
+          const roleRef = ref(db, `attendance/users/${currentUser.uid}/role`);
           const snapshot = await get(roleRef);
-
-          console.log("🟢 Firebase snapshot exists:", snapshot.exists());
-          console.log("🟢 Role from Firebase:", snapshot.val());
-
           if (snapshot.exists()) {
+            console.log("✅ Fetched role from Firebase:", snapshot.val());
             setRole(snapshot.val());
           } else {
+            console.warn("⚠️ Role not found for user:", currentUser.uid);
             setRole(null);
           }
         } catch (err) {
-          console.error("🔴 Error fetching role:", err);
+          console.error("❌ Error fetching role:", err);
           setRole(null);
         }
       } else {
@@ -52,12 +48,10 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  // 🕒 Show while checking auth
   if (checkingAuth) {
     return <div className="text-center mt-10">Checking authentication...</div>;
   }
 
-  // 🕒 Show while fetching role after login
   if (user && role === null) {
     return <div className="text-center mt-10">Loading user role...</div>;
   }
@@ -76,8 +70,6 @@ function App() {
         path="/signup"
         element={user ? <Navigate to="/dashboard" replace /> : <RoleSelectSignup />}
       />
-
-      {/* Main Dashboard route redirects based on role */}
       <Route
         path="/dashboard"
         element={
@@ -96,8 +88,6 @@ function App() {
           )
         }
       />
-
-      {/* Explicit dashboard routes */}
       <Route
         path="/admin-dashboard"
         element={user && role === "admin" ? <AdminDashboard /> : <Navigate to="/login" replace />}
@@ -110,8 +100,6 @@ function App() {
         path="/student-dashboard"
         element={user && role === "student" ? <StudentDashboard /> : <Navigate to="/login" replace />}
       />
-
-      {/* Catch-all route */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
