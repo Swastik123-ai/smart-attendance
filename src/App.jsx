@@ -28,3 +28,4 @@ useEffect(() => {
 
   return () => unsubscribe();
 }, []);
+export default App;
